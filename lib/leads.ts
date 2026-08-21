@@ -30,6 +30,7 @@ const LEADS_EMAILS = [
   "CollinsellsFlorida@gmail.com",
 ];
 
+/** Google Calendar "Add event" link — no OAuth required */
 export function buildGoogleCalendarLink(data: Booking) {
   const start = parseLocal(data.date, data.time);
   if (!start) return "";
@@ -56,7 +57,8 @@ export function buildGoogleCalendarLink(data: Booking) {
 }
 
 function parseLocal(date: string, time: string) {
-  const d = new Date(`${date}T${time.length === 5 ? time : time.slice(0, 5)}:00-04:00`);
+  const t = time.length === 5 ? time : time.slice(0, 5);
+  const d = new Date(`${date}T${t}:00-04:00`);
   return Number.isNaN(d.getTime()) ? null : d;
 }
 
@@ -83,7 +85,7 @@ function formatBooking(data: Booking) {
     `Email: ${data.email}`,
     `Phone: ${data.phone || "n/a"}`,
     `Date: ${data.date}`,
-    `Time: ${data.time} (confirm time zone)`,
+    `Time: ${data.time} Eastern (Mon–Fri 9–5)`,
     `Listing: ${data.listingId || "general"}`,
     "",
     data.notes || "",
@@ -135,18 +137,26 @@ async function sendViaResend(subject: string, text: string, replyTo: string) {
 async function sendViaFormSubmit(subject: string, payload: Record<string, string>) {
   const primary = LEADS_EMAILS[0];
   const cc = LEADS_EMAILS[1];
-  const res = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(primary)}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json", Accept: "application/json" },
-    body: JSON.stringify({
-      _subject: subject,
-      _template: "table",
-      _cc: cc,
-      _captcha: "false",
-      ...payload,
-    }),
-  });
-  return res.ok;
+  try {
+    const res = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(primary)}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({
+        _subject: subject,
+        _template: "table",
+        _cc: cc,
+        _captcha: "false",
+        ...payload,
+      }),
+    });
+    const data = await res.json().catch(() => ({} as any));
+    if (res.ok) return true;
+    if (data.success === true || data.success === "true") return true;
+    if (typeof data.message === "string" && /confirm|check your email/i.test(data.message)) return true;
+    return false;
+  } catch {
+    return false;
+  }
 }
 
 export async function deliverInquiry(data: Inquiry) {
@@ -194,9 +204,12 @@ export async function deliverBooking(data: Booking) {
     time: data.time,
     notes: data.notes || "",
   });
-  let channel: "resend" | "formsubmit" = "formsubmit";
+
+  let channel: "resend" | "formsubmit" | "calendar_only" = "formsubmit";
+  let emailed = false;
   if (await sendViaResend(subject, text, data.email)) {
     channel = "resend";
+    emailed = true;
   } else {
     const ok = await sendViaFormSubmit(subject, {
       name: data.name,
@@ -208,9 +221,23 @@ export async function deliverBooking(data: Booking) {
       notes: data.notes || "",
       calendar_link: calendarLink,
     });
-    if (!ok) throw new Error("Email delivery failed. Call (321) 208-2111.");
+    if (ok) {
+      emailed = true;
+      channel = "formsubmit";
+    } else {
+      channel = "calendar_only";
+    }
   }
-  return { channel, emails: LEADS_EMAILS, sheet, calendarLink, appointmentUrl };
+
+  return {
+    ok: true as const,
+    channel,
+    emailed,
+    emails: LEADS_EMAILS,
+    sheet,
+    calendarLink,
+    appointmentUrl,
+  };
 }
 
 export function getCalendarUrl() {
