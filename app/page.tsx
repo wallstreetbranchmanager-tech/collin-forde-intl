@@ -4,6 +4,7 @@ import Globe from "./Globe";
 
 const PRIMARY = "CollinsellsFlorida@gmail.com";
 const CC = "collin.forde.international@gmail.com";
+const PORTRAIT = "https://lh3.googleusercontent.com/d/1G8w94ZoNhGcZWdbIS7cxRZHCk2Oh-hKP=w1000";
 
 async function dualEmail(subject: string, fields: Record<string, string>) {
   const res = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(PRIMARY)}`, {
@@ -20,10 +21,28 @@ async function dualEmail(subject: string, fields: Record<string, string>) {
   throw new Error(data.message || "Send failed — call (321) 208-2111");
 }
 
+function calendarAddLink(name: string, date: string, time: string, notes: string) {
+  const start = new Date(`${date}T${(time || "12:00").slice(0, 5)}:00-04:00`);
+  if (Number.isNaN(start.getTime())) return "";
+  const end = new Date(start.getTime() + 45 * 60 * 1000);
+  const fmt = (d: Date) => d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+  const p = new URLSearchParams({
+    action: "TEMPLATE",
+    text: `Viewing / call with Collin Forde — ${name}`,
+    dates: `${fmt(start)}/${fmt(end)}`,
+    details: `Client: ${name}\nNotes: ${notes || "none"}\nCollin: (321) 208-2111`,
+    location: "Phone / Google Meet / property",
+    add: `${PRIMARY},${CC}`,
+  });
+  return `https://calendar.google.com/calendar/render?${p.toString()}`;
+}
+
 export default function Page() {
   const [inq, setInq] = useState("");
   const [sch, setSch] = useState("");
   const [cal, setCal] = useState("");
+  const [addLink, setAddLink] = useState("");
+
   useEffect(() => {
     fetch("/api/config").then((r) => r.json()).then((d) => { if (d.calendarUrl) setCal(d.calendarUrl); }).catch(() => {});
   }, []);
@@ -45,16 +64,20 @@ export default function Page() {
   async function onSch(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setSch("Sending…");
+    setAddLink("");
     const f = new FormData(e.currentTarget);
-    const body = {
-      name: String(f.get("name")), email: String(f.get("email")),
-      date: String(f.get("date")), time: String(f.get("time")), notes: String(f.get("notes") || ""),
-    };
+    const name = String(f.get("name"));
+    const date = String(f.get("date"));
+    const time = String(f.get("time"));
+    const notes = String(f.get("notes") || "");
+    const body = { name, email: String(f.get("email")), date, time, notes };
     try {
       const r = await fetch("/api/book", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
       const d = await r.json();
-      if (!d.ok) await dualEmail(`Call Request from ${body.name}`, body as any);
-      setSch("Request sent to both inboxes. Collin will confirm the time.");
+      if (!d.ok) await dualEmail(`Viewing / Call from ${name}`, body as any);
+      const link = d.calendarLink || calendarAddLink(name, date, time, notes);
+      setAddLink(link);
+      setSch("Request sent to both inboxes. Add it to Google Calendar below — Collin will confirm.");
       e.currentTarget.reset();
     } catch (err: any) { setSch(err.message); }
   }
@@ -65,7 +88,7 @@ export default function Page() {
         <div className="nav-mark">Collin M. <span>Forde</span></div>
         <div className="nav-links">
           <a href="#about">About</a>
-          <a href="#markets">Markets</a>
+          <a href="#calendar">Calendar</a>
           <a href="#contact">Contact</a>
         </div>
         <a className="nav-call" href="tel:+13212082111">(321) 208-2111</a>
@@ -76,8 +99,8 @@ export default function Page() {
         <div className="hero-content">
           <div className="eyebrow">International Real Estate</div>
           <h1>Property<br />without <em>borders.</em></h1>
-          <a className="btn btn-primary" href="tel:+13212082111">Call (321) 208-2111</a>
-          <p className="lede">Collin M. Forde — Mr. Real Estate — closes deals across Florida, Thailand, and Trinidad &amp; Tobago, with growing international reach. One advisor. Three markets. No borders.</p>
+          <a className="btn btn-primary" href="#calendar">Book a viewing</a>
+          <p className="lede">Collin M. Forde — Mr. Real Estate — Florida, Thailand, Trinidad &amp; Tobago, and international clients. One advisor. No borders.</p>
         </div>
       </section>
 
@@ -93,10 +116,9 @@ export default function Page() {
           </div>
           <div>
             <div className="portrait">
-              <img src="/collin-portrait.jpg" alt="Collin M. Forde — Mr. Real Estate" />
+              <img src={PORTRAIT} alt="Collin M. Forde — Mr. Real Estate" onError={(e) => { (e.target as HTMLImageElement).src = "/collin-portrait.jpg"; }} />
             </div>
             <div className="stats">
-              <div><div className="num">3</div><div className="label">Core markets</div></div>
               <div><div className="num">SL3058438</div><div className="label">Florida license</div></div>
               <div><div className="num">24h</div><div className="label">Typical follow-up</div></div>
             </div>
@@ -104,24 +126,34 @@ export default function Page() {
         </div>
       </section>
 
-      <section id="markets">
+      <section id="calendar">
         <div className="section-head">
-          <div className="eyebrow">Where He Works</div>
-          <h2>A portfolio that spans oceans.</h2>
+          <div className="eyebrow">Google Calendar</div>
+          <h2>Book a viewing.</h2>
+          <p className="lede" style={{ marginTop: 12 }}>Pick a date and time. The request hits both of Collin&apos;s inboxes and you can drop it straight onto Google Calendar.</p>
+          {cal ? (
+            <p style={{ marginTop: 16 }}>
+              <a className="btn btn-primary" href={cal} target="_blank" rel="noreferrer">Open live availability</a>
+            </p>
+          ) : null}
         </div>
-        <div className="market-grid">
-          <article className="card">
-            <div className="market-scene"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/West_Palm_Beach_Skyline_Night.JPG?width=600" alt="West Palm Beach" /></div>
-            <div className="card-body"><div className="coord">26.7°N · 80.0°W</div><h3>Florida</h3><p style={{color:"var(--ivory-dim)",marginTop:8,lineHeight:1.65}}>Home base and primary market — residential, investment, and relocation property across Palm Beach County and beyond.</p></div>
-          </article>
-          <article className="card">
-            <div className="market-scene"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Wat_Arun_from_Chao_Phraya_River.jpg?width=600" alt="Bangkok" /></div>
-            <div className="card-body"><div className="coord">13.8°N · 100.5°E</div><h3>Thailand</h3><p style={{color:"var(--ivory-dim)",marginTop:8,lineHeight:1.65}}>International investment and vacation property for buyers looking to place capital — and roots — in Southeast Asia.</p></div>
-          </article>
-          <article className="card">
-            <div className="market-scene"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Pigeon_Point_beach.jpg?width=800" alt="Tobago" /></div>
-            <div className="card-body"><div className="coord">10.7°N · 61.2°W</div><h3>Trinidad &amp; Tobago</h3><p style={{color:"var(--ivory-dim)",marginTop:8,lineHeight:1.65}}>Caribbean residential and land opportunities for clients with ties to, or interest in, the twin islands.</p></div>
-          </article>
+        <div className="form-grid" style={{ gridTemplateColumns: "1fr" }}>
+          <div className="card"><div className="card-body">
+            <form onSubmit={onSch}>
+              <div className="field-row">
+                <label>Name<input name="name" required /></label>
+                <label>Email<input name="email" type="email" required /></label>
+              </div>
+              <div className="field-row">
+                <label>Preferred date<input name="date" type="date" required /></label>
+                <label>Preferred time<input name="time" type="time" required /></label>
+              </div>
+              <label>Notes<textarea name="notes" rows={3} placeholder="Time zone, property, phone, anything else" /></label>
+              <button className="btn btn-primary" type="submit">Request this time</button>
+              <p className="status">{sch}</p>
+              {addLink ? <p className="status"><a className="btn btn-ghost" href={addLink} target="_blank" rel="noreferrer">Add to Google Calendar</a></p> : null}
+            </form>
+          </div></div>
         </div>
       </section>
 
@@ -129,13 +161,11 @@ export default function Page() {
         <div className="section-head">
           <div className="eyebrow">Get In Touch</div>
           <h2>Let&apos;s talk property.</h2>
-          <p className="lede" style={{marginTop:12}}>Wherever the property is — Florida, Thailand, Trinidad &amp; Tobago, or somewhere else entirely — Collin is a call or message away.</p>
-          {cal ? <p style={{marginTop:16}}><a className="btn btn-ghost" href={cal} target="_blank" rel="noreferrer">Book a viewing on calendar</a></p> : null}
         </div>
-        <div className="form-grid">
+        <div className="form-grid" style={{ gridTemplateColumns: "1fr" }}>
           <div className="card"><div className="card-body">
             <div className="eyebrow">Send An Inquiry</div>
-            <h3 style={{margin:"0.6rem 0 1rem"}}>Tell him what you&apos;re looking for.</h3>
+            <h3 style={{ margin: "0.6rem 0 1rem" }}>Tell him what you&apos;re looking for.</h3>
             <form onSubmit={onInq}>
               <div className="field-row">
                 <label>Name<input name="name" required /></label>
@@ -150,30 +180,13 @@ export default function Page() {
               <p className="status">{inq}</p>
             </form>
           </div></div>
-          <div className="card"><div className="card-body">
-            <div className="eyebrow">Schedule A Call</div>
-            <h3 style={{margin:"0.6rem 0 1rem"}}>Request a consultation time.</h3>
-            <form onSubmit={onSch}>
-              <div className="field-row">
-                <label>Name<input name="name" required /></label>
-                <label>Email<input name="email" type="email" required /></label>
-              </div>
-              <div className="field-row">
-                <label>Preferred date<input name="date" type="date" required /></label>
-                <label>Preferred time<input name="time" type="time" required /></label>
-              </div>
-              <label>Notes<textarea name="notes" rows={3} placeholder="Time zone, property you're interested in, anything else" /></label>
-              <button className="btn btn-primary" type="submit">Request This Time</button>
-              <p className="status">{sch}</p>
-            </form>
-          </div></div>
         </div>
       </section>
 
       <footer>
-        Collin M. Forde — Mr. Real Estate · License #SL3058438 · All U.S. properties sold through Dalton Wade Real Estate Group (CQ1047837)
+        Collin M. Forde — Mr. Real Estate · License #SL3058438 · Dalton Wade Real Estate Group (CQ1047837)
         <br />Created by Apex Executive Studio / Paul Destocki 2026
-        <br />Forms deliver to both CollinsellsFlorida@gmail.com and collin.forde.international@gmail.com
+        <br />Forms deliver to CollinsellsFlorida@gmail.com and collin.forde.international@gmail.com
       </footer>
     </>
   );
