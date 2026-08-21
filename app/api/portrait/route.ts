@@ -4,7 +4,7 @@ import { join } from "path";
 
 export async function GET() {
   const dir = join(process.cwd(), "public");
-  const b64 = readFileSync(join(dir, "portrait-p1.txt"), "utf8") + readFileSync(join(dir, "portrait-p2.txt"), "utf8");
+  const b64 = [0,1,2,3].map(i => readFileSync(join(dir, `pp${i}.txt`), "utf8")).join("");
   const buf = Buffer.from(b64.trim(), "base64");
   return new NextResponse(buf, {
     headers: {
