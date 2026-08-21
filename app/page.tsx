@@ -4,7 +4,20 @@ import Globe from "./Globe";
 
 const PRIMARY = "CollinsellsFlorida@gmail.com";
 const CC = "collin.forde.international@gmail.com";
-const PORTRAIT = "https://lh3.googleusercontent.com/d/1G8w94ZoNhGcZWdbIS7cxRZHCk2Oh-hKP=w1000";
+const PORTRAIT = "/api/portrait";
+
+const TIME_SLOTS = [
+  "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
+  "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
+  "15:00", "15:30", "16:00", "16:30", "17:00",
+];
+
+function labelTime(t: string) {
+  const [h, m] = t.split(":").map(Number);
+  const ampm = h >= 12 ? "PM" : "AM";
+  const hr = ((h + 11) % 12) + 1;
+  return `${hr}:${String(m).padStart(2, "0")} ${ampm}`;
+}
 
 async function dualEmail(subject: string, fields: Record<string, string>) {
   const res = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(PRIMARY)}`, {
@@ -30,7 +43,7 @@ function calendarAddLink(name: string, date: string, time: string, notes: string
     action: "TEMPLATE",
     text: `Viewing / call with Collin Forde — ${name}`,
     dates: `${fmt(start)}/${fmt(end)}`,
-    details: `Client: ${name}\nNotes: ${notes || "none"}\nCollin: (321) 208-2111`,
+    details: `Client: ${name}\nNotes: ${notes || "none"}\nCollin: (321) 208-2111\nAvailability: Mon–Fri 9:00 AM – 5:00 PM`,
     location: "Phone / Google Meet / property",
     add: `${PRIMARY},${CC}`,
   });
@@ -116,11 +129,11 @@ export default function Page() {
           </div>
           <div>
             <div className="portrait">
-              <img src={PORTRAIT} alt="Collin M. Forde — Mr. Real Estate" onError={(e) => { (e.target as HTMLImageElement).src = "/collin-portrait.jpg"; }} />
+              <img src={PORTRAIT} alt="Collin M. Forde — Mr. Real Estate" width={400} height={400} />
             </div>
             <div className="stats">
               <div><div className="num">SL3058438</div><div className="label">Florida license</div></div>
-              <div><div className="num">24h</div><div className="label">Typical follow-up</div></div>
+              <div><div className="num">9–5</div><div className="label">Mon–Fri availability</div></div>
             </div>
           </div>
         </div>
@@ -130,7 +143,9 @@ export default function Page() {
         <div className="section-head">
           <div className="eyebrow">Google Calendar</div>
           <h2>Book a viewing.</h2>
-          <p className="lede" style={{ marginTop: 12 }}>Pick a date and time. The request hits both of Collin&apos;s inboxes and you can drop it straight onto Google Calendar.</p>
+          <p className="lede" style={{ marginTop: 12 }}>
+            Available <strong>Monday–Friday, 9:00 AM – 5:00 PM</strong> (Eastern). Pick a slot — the request hits both of Collin&apos;s inboxes and you can add it to Google Calendar.
+          </p>
           {cal ? (
             <p style={{ marginTop: 16 }}>
               <a className="btn btn-primary" href={cal} target="_blank" rel="noreferrer">Open live availability</a>
@@ -146,9 +161,16 @@ export default function Page() {
               </div>
               <div className="field-row">
                 <label>Preferred date<input name="date" type="date" required /></label>
-                <label>Preferred time<input name="time" type="time" required /></label>
+                <label>Preferred time
+                  <select name="time" required defaultValue="">
+                    <option value="" disabled>Select 9 AM – 5 PM</option>
+                    {TIME_SLOTS.map((t) => (
+                      <option key={t} value={t}>{labelTime(t)}</option>
+                    ))}
+                  </select>
+                </label>
               </div>
-              <label>Notes<textarea name="notes" rows={3} placeholder="Time zone, property, phone, anything else" /></label>
+              <label>Notes<textarea name="notes" rows={3} placeholder="Time zone if not Eastern, property, phone, anything else" /></label>
               <button className="btn btn-primary" type="submit">Request this time</button>
               <p className="status">{sch}</p>
               {addLink ? <p className="status"><a className="btn btn-ghost" href={addLink} target="_blank" rel="noreferrer">Add to Google Calendar</a></p> : null}
@@ -185,6 +207,7 @@ export default function Page() {
 
       <footer>
         Collin M. Forde — Mr. Real Estate · License #SL3058438 · Dalton Wade Real Estate Group (CQ1047837)
+        <br />Available Mon–Fri 9:00 AM – 5:00 PM Eastern · (321) 208-2111
         <br />Created by Apex Executive Studio / Paul Destocki 2026
         <br />Forms deliver to CollinsellsFlorida@gmail.com and collin.forde.international@gmail.com
       </footer>
