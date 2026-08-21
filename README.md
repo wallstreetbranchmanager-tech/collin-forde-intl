@@ -1,35 +1,15 @@
 # Collin Forde International — Level 2
 
-Public site for Collin Forde (SL3058438), Dalton Wade, St. Petersburg.
+Exact Apex Executive Studio design (AES-7F3A9C2E) Collin already loves + Level 2 backend.
 
-Inbox: collin.forde.international@gmail.com
-Phone: (321) 208-2111
+## Email (both inboxes on every form)
+1. CollinsellsFlorida@gmail.com
+2. collin.forde.international@gmail.com
 
-## What Level 2 includes
-- Next.js app on Vercel
-- Validated buyer/seller/inquiry forms
-- Viewing appointment requests
-- Optional Google Calendar Appointment Schedule embed (`NEXT_PUBLIC_CALENDAR_URL`)
-- Email delivery via Resend (`RESEND_API_KEY`) or FormSubmit.co (Collin must confirm the first email)
+Resend if RESEND_API_KEY is set, else FormSubmit.co (primary + _cc).
 
-## Env
-```
-LEADS_EMAIL=collin.forde.international@gmail.com
-RESEND_API_KEY=
-RESEND_FROM=
-NEXT_PUBLIC_CALENDAR_URL=
-```
+## Google Calendar
+Create Appointment schedule on collin.forde.international@gmail.com and set NEXT_PUBLIC_CALENDAR_URL.
 
-## Google Calendar (do this on the new Gmail)
-1. calendar.google.com as collin.forde.international@gmail.com
-2. Create an Appointment schedule
-3. Copy the booking page URL
-4. Paste into NEXT_PUBLIC_CALENDAR_URL on Vercel
-
-## Not required to launch Level 2
-Google Docs, Drive, Sheets. Those are CRM/doc extras.
-Sheets is a cheap lead log later. Drive is for listing packets. Docs is for CMA templates.
-Live MLS/IDX is Level 3.
-
-## Legal
-Keep the brokerage name, license, equal housing, and wire-fraud warning on every public page.
+## Not required for Level 2
+Google Docs / Drive / Sheets, live MLS/IDX.
