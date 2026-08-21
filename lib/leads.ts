@@ -25,7 +25,6 @@ export const bookingSchema = z.object({
 export type Inquiry = z.infer<typeof inquirySchema>;
 export type Booking = z.infer<typeof bookingSchema>;
 
-/** Both inboxes — Level 2 requirement */
 const LEADS_EMAILS = [
   "CollinsellsFlorida@gmail.com",
   "collin.forde.international@gmail.com",
@@ -80,7 +79,6 @@ async function sendViaResend(subject: string, text: string, replyTo: string) {
   return res.ok;
 }
 
-/** FormSubmit: primary inbox + _cc for the second so both receive */
 async function sendViaFormSubmit(subject: string, payload: Record<string, string>) {
   const primary = LEADS_EMAILS[0];
   const cc = LEADS_EMAILS[1];
