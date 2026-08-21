@@ -1,10 +1,11 @@
 "use client";
 import { useEffect, useState, FormEvent } from "react";
 import Globe from "./Globe";
+import ContactIcons from "./ContactIcons";
 
 const PRIMARY = "CollinsellsFlorida@gmail.com";
 const CC = "collin.forde.international@gmail.com";
-const PORTRAIT = "/api/portrait";
+const PORTRAIT = "/collin-portrait.jpg";
 
 const TIME_SLOTS = [
   "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
@@ -112,7 +113,12 @@ export default function Page() {
         <div className="hero-content">
           <div className="eyebrow">International Real Estate</div>
           <h1>Property<br />without <em>borders.</em></h1>
-          <a className="btn btn-primary" href="#calendar">Book a viewing</a>
+          <div className="hero-cta">
+            <a className="btn btn-primary" href="tel:+13212082111">Call (321) 208-2111</a>
+            <div className="hero-cta-row">
+              <ContactIcons />
+            </div>
+          </div>
           <p className="lede">Collin M. Forde — Mr. Real Estate — Florida, Thailand, Trinidad &amp; Tobago, and international clients. One advisor. No borders.</p>
         </div>
       </section>
@@ -129,7 +135,7 @@ export default function Page() {
           </div>
           <div>
             <div className="portrait">
-              <img src={PORTRAIT} alt="Collin M. Forde — Mr. Real Estate" width={400} height={400} />
+              <img src={PORTRAIT} alt="Collin M. Forde — Mr. Real Estate" width={400} height={500} />
             </div>
             <div className="stats">
               <div><div className="num">SL3058438</div><div className="label">Florida license</div></div>
@@ -184,7 +190,14 @@ export default function Page() {
           <div className="eyebrow">Get In Touch</div>
           <h2>Let&apos;s talk property.</h2>
         </div>
-        <div className="form-grid" style={{ gridTemplateColumns: "1fr" }}>
+        <div className="contact-wrap">
+          <div className="contact-left">
+            <p className="lede">Wherever the property is — Florida, Thailand, Trinidad &amp; Tobago, or somewhere else entirely — Collin is a call or message away.</p>
+            <div className="cta-stack">
+              <a className="btn btn-primary" href="tel:+13212082111">Call (321) 208-2111</a>
+              <ContactIcons />
+            </div>
+          </div>
           <div className="card"><div className="card-body">
             <div className="eyebrow">Send An Inquiry</div>
             <h3 style={{ margin: "0.6rem 0 1rem" }}>Tell him what you&apos;re looking for.</h3>
