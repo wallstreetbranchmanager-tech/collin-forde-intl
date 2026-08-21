@@ -2,6 +2,7 @@
 import { useEffect, useState, FormEvent } from "react";
 import Globe from "./Globe";
 import ContactIcons from "./ContactIcons";
+import { FLORIDA_CITIES, THAILAND_CITIES, TT_CITIES } from "../lib/markets";
 
 const PRIMARY = "collin.forde.international@gmail.com";
 const CC = "CollinsellsFlorida@gmail.com";
@@ -102,6 +103,7 @@ export default function Page() {
         <div className="nav-mark">Collin M. <span>Forde</span></div>
         <div className="nav-links">
           <a href="#about">About</a>
+          <a href="#markets">Markets</a>
           <a href="#calendar">Calendar</a>
           <a href="#contact">Contact</a>
         </div>
@@ -119,7 +121,7 @@ export default function Page() {
               <ContactIcons />
             </div>
           </div>
-          <p className="lede">Collin M. Forde — Mr. Real Estate — Florida, Thailand, Trinidad &amp; Tobago, and international clients. One advisor. No borders.</p>
+          <p className="lede">Collin M. Forde — Mr. Real Estate — Florida, Thailand, Trinidad & Tobago, and international clients. One advisor. No borders.</p>
         </div>
       </section>
 
@@ -137,10 +139,30 @@ export default function Page() {
             <div className="portrait">
               <img src={PORTRAIT} alt="Collin M. Forde — Mr. Real Estate" width={400} height={500} />
             </div>
-            <div className="stats">
-              <div><div className="num">SL3058438</div><div className="label">Florida license</div></div>
-              <div><div className="num">9–5</div><div className="label">Mon–Fri availability</div></div>
-            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="markets">
+        <div className="section-head">
+          <div className="eyebrow">Where He Works</div>
+          <h2>Key cities. No borders.</h2>
+          <p className="lede" style={{ marginTop: 12 }}>
+            Florida, Thailand (outside Bangkok), and Trinidad & Tobago — plus international clients worldwide.
+          </p>
+        </div>
+        <div className="city-grid">
+          <div>
+            <h3>Florida</h3>
+            <p>{FLORIDA_CITIES.join(" · ")}</p>
+          </div>
+          <div>
+            <h3>Thailand</h3>
+            <p>{THAILAND_CITIES.join(" · ")}</p>
+          </div>
+          <div>
+            <h3>Trinidad & Tobago</h3>
+            <p>{TT_CITIES.join(" · ")}</p>
           </div>
         </div>
       </section>
@@ -150,7 +172,7 @@ export default function Page() {
           <div className="eyebrow">Google Calendar</div>
           <h2>Book a viewing.</h2>
           <p className="lede" style={{ marginTop: 12 }}>
-            Available <strong>Monday–Friday, 9:00 AM – 5:00 PM</strong> (Eastern). Pick a slot — the request hits both of Collin&apos;s inboxes and you can add it to Google Calendar.
+            Available <strong>Monday–Friday, 9:00 AM – 5:00 PM</strong> (Eastern). Pick a slot — the request hits both of Collin's inboxes and you can add it to Google Calendar.
           </p>
           {cal ? (
             <p style={{ marginTop: 16 }}>
@@ -188,11 +210,11 @@ export default function Page() {
       <section id="contact">
         <div className="section-head">
           <div className="eyebrow">Get In Touch</div>
-          <h2>Let&apos;s talk property.</h2>
+          <h2>Let's talk property.</h2>
         </div>
         <div className="contact-wrap">
           <div className="contact-left">
-            <p className="lede">Wherever the property is — Florida, Thailand, Trinidad &amp; Tobago, or somewhere else entirely — Collin is a call or message away.</p>
+            <p className="lede">Wherever the property is — Florida, Thailand, Trinidad & Tobago, or somewhere else entirely — Collin is a call or message away.</p>
             <div className="cta-stack">
               <a className="btn btn-primary" href="tel:+13212082111">Call (321) 208-2111</a>
               <ContactIcons />
@@ -200,7 +222,7 @@ export default function Page() {
           </div>
           <div className="card"><div className="card-body">
             <div className="eyebrow">Send An Inquiry</div>
-            <h3 style={{ margin: "0.6rem 0 1rem" }}>Tell him what you&apos;re looking for.</h3>
+            <h3 style={{ margin: "0.6rem 0 1rem" }}>Tell him what you're looking for.</h3>
             <form onSubmit={onInq}>
               <div className="field-row">
                 <label>Name<input name="name" required /></label>
@@ -208,7 +230,21 @@ export default function Page() {
               </div>
               <div className="field-row">
                 <label>Phone<input name="phone" type="tel" /></label>
-                <label>Market<select name="market"><option>Florida</option><option>Thailand</option><option>Trinidad &amp; Tobago</option><option>Other / International</option></select></label>
+                <label>Market
+                  <select name="market" defaultValue="">
+                    <option value="" disabled>Select city / market</option>
+                    <optgroup label="Florida">
+                      {FLORIDA_CITIES.map((c) => <option key={c} value={`Florida — ${c}`}>{c}</option>)}
+                    </optgroup>
+                    <optgroup label="Thailand">
+                      {THAILAND_CITIES.map((c) => <option key={c} value={`Thailand — ${c}`}>{c}</option>)}
+                    </optgroup>
+                    <optgroup label="Trinidad & Tobago">
+                      {TT_CITIES.map((c) => <option key={c} value={`Trinidad & Tobago — ${c}`}>{c}</option>)}
+                    </optgroup>
+                    <option value="Other / International">Other / International</option>
+                  </select>
+                </label>
               </div>
               <label>Message<textarea name="message" rows={4} required placeholder="What are you looking to buy, sell, or invest in?" /></label>
               <button className="btn btn-primary" type="submit">Send Inquiry</button>
