@@ -5,7 +5,7 @@ import ContactIcons from "./ContactIcons";
 
 const PRIMARY = "CollinsellsFlorida@gmail.com";
 const CC = "collin.forde.international@gmail.com";
-const PORTRAIT = "/api/portrait";
+const PORTRAIT = "/collin-portrait.jpg";
 
 const TIME_SLOTS = [
   "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
