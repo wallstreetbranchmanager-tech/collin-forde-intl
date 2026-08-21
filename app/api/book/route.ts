@@ -16,7 +16,14 @@ export async function POST(req: Request) {
       );
     }
     const result = await deliverBooking(parsed.data);
-    return NextResponse.json({ ok: true, channel: result.channel, emails: result.emails });
+    return NextResponse.json({
+      ok: true,
+      channel: result.channel,
+      emails: result.emails,
+      sheet: result.sheet,
+      calendarLink: result.calendarLink,
+      appointmentUrl: result.appointmentUrl,
+    });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Booking failed";
     return NextResponse.json({ ok: false, error: message }, { status: 500 });

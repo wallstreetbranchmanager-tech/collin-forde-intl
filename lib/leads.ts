@@ -30,6 +30,36 @@ const LEADS_EMAILS = [
   "collin.forde.international@gmail.com",
 ];
 
+export function buildGoogleCalendarLink(data: Booking) {
+  const start = parseLocal(data.date, data.time);
+  if (!start) return "";
+  const end = new Date(start.getTime() + 45 * 60 * 1000);
+  const fmt = (d: Date) =>
+    d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+  const params = new URLSearchParams({
+    action: "TEMPLATE",
+    text: `Property viewing / call — ${data.name}`,
+    dates: `${fmt(start)}/${fmt(end)}`,
+    details: [
+      `Client: ${data.name}`,
+      `Email: ${data.email}`,
+      `Phone: ${data.phone || "n/a"}`,
+      `Notes: ${data.notes || "none"}`,
+      "",
+      "Collin M. Forde · (321) 208-2111",
+      "CollinsellsFlorida@gmail.com · collin.forde.international@gmail.com",
+    ].join("\n"),
+    location: "Phone / Google Meet / TBD",
+    add: LEADS_EMAILS.join(","),
+  });
+  return `https://calendar.google.com/calendar/render?${params.toString()}`;
+}
+
+function parseLocal(date: string, time: string) {
+  const d = new Date(`${date}T${time.length === 5 ? time : time.slice(0, 5)}:00-04:00`);
+  return Number.isNaN(d.getTime()) ? null : d;
+}
+
 function formatInquiry(data: Inquiry) {
   return [
     `Type: ${data.type}`,
@@ -46,22 +76,25 @@ function formatInquiry(data: Inquiry) {
 }
 
 function formatBooking(data: Booking) {
+  const cal = buildGoogleCalendarLink(data);
   return [
     `VIEWING / CALL REQUEST`,
     `Name: ${data.name}`,
     `Email: ${data.email}`,
     `Phone: ${data.phone || "n/a"}`,
     `Date: ${data.date}`,
-    `Time: ${data.time} (confirm time zone with client)`,
+    `Time: ${data.time} (confirm time zone)`,
     `Listing: ${data.listingId || "general"}`,
     "",
     data.notes || "",
-  ].join("\n");
+    "",
+    cal ? `Add to Google Calendar:\n${cal}` : "",
+  ].filter(Boolean).join("\n");
 }
 
 async function logToSheets(row: Record<string, string>) {
   const webhook = process.env.GOOGLE_SHEETS_WEBHOOK;
-  if (!webhook) return false;
+  if (!webhook) return { ok: false as const, reason: "no_webhook" };
   try {
     const res = await fetch(webhook, {
       method: "POST",
@@ -73,9 +106,9 @@ async function logToSheets(row: Record<string, string>) {
         ...row,
       }),
     });
-    return res.ok;
-  } catch {
-    return false;
+    return { ok: res.ok, reason: res.ok ? "sheets" : `http_${res.status}` };
+  } catch (e) {
+    return { ok: false as const, reason: e instanceof Error ? e.message : "sheets_error" };
   }
 }
 
@@ -119,7 +152,7 @@ async function sendViaFormSubmit(subject: string, payload: Record<string, string
 export async function deliverInquiry(data: Inquiry) {
   const subject = `[INQUIRY] ${data.name} — Collin Forde`;
   const text = formatInquiry(data);
-  await logToSheets({
+  const sheet = await logToSheets({
     type: data.type,
     name: data.name,
     email: data.email,
@@ -127,27 +160,32 @@ export async function deliverInquiry(data: Inquiry) {
     market: data.market || "",
     message: data.message,
   });
-  const sentResend = await sendViaResend(subject, text, data.email);
-  if (sentResend) return { channel: "resend" as const, emails: LEADS_EMAILS };
-  const sentForm = await sendViaFormSubmit(subject, {
-    name: data.name,
-    email: data.email,
-    phone: data.phone || "",
-    type: data.type,
-    market: data.market || "",
-    budget: data.budget || "",
-    timeline: data.timeline || "",
-    listingId: data.listingId || "",
-    message: data.message,
-  });
-  if (sentForm) return { channel: "formsubmit" as const, emails: LEADS_EMAILS };
-  throw new Error("No mail channel configured. Add RESEND_API_KEY or confirm FormSubmit for the inbox.");
+  let channel: "resend" | "formsubmit" = "formsubmit";
+  if (await sendViaResend(subject, text, data.email)) {
+    channel = "resend";
+  } else {
+    const ok = await sendViaFormSubmit(subject, {
+      name: data.name,
+      email: data.email,
+      phone: data.phone || "",
+      type: data.type,
+      market: data.market || "",
+      budget: data.budget || "",
+      timeline: data.timeline || "",
+      listingId: data.listingId || "",
+      message: data.message,
+    });
+    if (!ok) throw new Error("Email delivery failed. Call (321) 208-2111.");
+  }
+  return { channel, emails: LEADS_EMAILS, sheet };
 }
 
 export async function deliverBooking(data: Booking) {
   const subject = `VIEWING / CALL ${data.date} ${data.time} — ${data.name}`;
   const text = formatBooking(data);
-  await logToSheets({
+  const calendarLink = buildGoogleCalendarLink(data);
+  const appointmentUrl = process.env.NEXT_PUBLIC_CALENDAR_URL || "";
+  const sheet = await logToSheets({
     type: "viewing",
     name: data.name,
     email: data.email,
@@ -156,19 +194,23 @@ export async function deliverBooking(data: Booking) {
     time: data.time,
     notes: data.notes || "",
   });
-  const sentResend = await sendViaResend(subject, text, data.email);
-  if (sentResend) return { channel: "resend" as const, emails: LEADS_EMAILS };
-  const sentForm = await sendViaFormSubmit(subject, {
-    name: data.name,
-    email: data.email,
-    phone: data.phone || "",
-    date: data.date,
-    time: data.time,
-    listingId: data.listingId || "",
-    notes: data.notes || "",
-  });
-  if (sentForm) return { channel: "formsubmit" as const, emails: LEADS_EMAILS };
-  throw new Error("No mail channel configured.");
+  let channel: "resend" | "formsubmit" = "formsubmit";
+  if (await sendViaResend(subject, text, data.email)) {
+    channel = "resend";
+  } else {
+    const ok = await sendViaFormSubmit(subject, {
+      name: data.name,
+      email: data.email,
+      phone: data.phone || "",
+      date: data.date,
+      time: data.time,
+      listingId: data.listingId || "",
+      notes: data.notes || "",
+      calendar_link: calendarLink,
+    });
+    if (!ok) throw new Error("Email delivery failed. Call (321) 208-2111.");
+  }
+  return { channel, emails: LEADS_EMAILS, sheet, calendarLink, appointmentUrl };
 }
 
 export function getCalendarUrl() {

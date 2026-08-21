@@ -7,5 +7,7 @@ export async function GET() {
       "CollinsellsFlorida@gmail.com",
       "collin.forde.international@gmail.com",
     ],
+    sheetsConfigured: Boolean(process.env.GOOGLE_SHEETS_WEBHOOK),
+    resendConfigured: Boolean(process.env.RESEND_API_KEY),
   });
 }
