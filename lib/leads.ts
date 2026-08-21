@@ -59,6 +59,26 @@ function formatBooking(data: Booking) {
   ].join("\n");
 }
 
+async function logToSheets(row: Record<string, string>) {
+  const webhook = process.env.GOOGLE_SHEETS_WEBHOOK;
+  if (!webhook) return false;
+  try {
+    const res = await fetch(webhook, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        timestamp: new Date().toISOString(),
+        source: "collin-forde-intl",
+        status: "new",
+        ...row,
+      }),
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
 async function sendViaResend(subject: string, text: string, replyTo: string) {
   const key = process.env.RESEND_API_KEY;
   if (!key) return false;
@@ -99,6 +119,14 @@ async function sendViaFormSubmit(subject: string, payload: Record<string, string
 export async function deliverInquiry(data: Inquiry) {
   const subject = `[INQUIRY] ${data.name} — Collin Forde`;
   const text = formatInquiry(data);
+  await logToSheets({
+    type: data.type,
+    name: data.name,
+    email: data.email,
+    phone: data.phone || "",
+    market: data.market || "",
+    message: data.message,
+  });
   const sentResend = await sendViaResend(subject, text, data.email);
   if (sentResend) return { channel: "resend" as const, emails: LEADS_EMAILS };
   const sentForm = await sendViaFormSubmit(subject, {
@@ -119,6 +147,15 @@ export async function deliverInquiry(data: Inquiry) {
 export async function deliverBooking(data: Booking) {
   const subject = `VIEWING / CALL ${data.date} ${data.time} — ${data.name}`;
   const text = formatBooking(data);
+  await logToSheets({
+    type: "viewing",
+    name: data.name,
+    email: data.email,
+    phone: data.phone || "",
+    date: data.date,
+    time: data.time,
+    notes: data.notes || "",
+  });
   const sentResend = await sendViaResend(subject, text, data.email);
   if (sentResend) return { channel: "resend" as const, emails: LEADS_EMAILS };
   const sentForm = await sendViaFormSubmit(subject, {
@@ -132,4 +169,8 @@ export async function deliverBooking(data: Booking) {
   });
   if (sentForm) return { channel: "formsubmit" as const, emails: LEADS_EMAILS };
   throw new Error("No mail channel configured.");
+}
+
+export function getCalendarUrl() {
+  return process.env.NEXT_PUBLIC_CALENDAR_URL || "";
 }
