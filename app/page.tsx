@@ -150,7 +150,7 @@ export default function Page() {
         <div className="market-grid">
           <div className="card">
             <div className="market-scene">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/West_Palm_Beach_Skyline_Night.JPG/640px-West_Palm_Beach_Skyline_Night.JPG" alt="West Palm Beach, Florida" loading="lazy" />
+              <img src="https://images.unsplash.com/photo-1533106497176-45ae19e68ba2?w=640&q=70" alt="Florida coast" loading="lazy" />
             </div>
             <div className="card-body">
               <span className="coord">26.82°N · 80.14°W</span>
@@ -160,7 +160,7 @@ export default function Page() {
           </div>
           <div className="card">
             <div className="market-scene">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Wat_Arun_from_Chao_Phraya_River.jpg/640px-Wat_Arun_from_Chao_Phraya_River.jpg" alt="Thailand" loading="lazy" />
+              <img src="https://images.unsplash.com/photo-1528183429752-a97d0bf99b5a?w=640&q=70" alt="Thailand" loading="lazy" />
             </div>
             <div className="card-body">
               <span className="coord">7.88°N · 98.39°E</span>
@@ -170,7 +170,7 @@ export default function Page() {
           </div>
           <div className="card">
             <div className="market-scene">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Pigeon_Point_beach.jpg/640px-Pigeon_Point_beach.jpg" alt="Tobago" loading="lazy" />
+              <img src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=640&q=70" alt="Tobago" loading="lazy" />
             </div>
             <div className="card-body">
               <span className="coord">10.65°N · 61.52°W</span>
