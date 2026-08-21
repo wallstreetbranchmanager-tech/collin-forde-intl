@@ -1,0 +1,84 @@
+:root {
+  --navy: #07141c;
+  --navy2: #0c2430;
+  --teal: #2f8f86;
+  --sand: #e8dcc8;
+  --gold: #c9a15e;
+  --ink: #f4efe6;
+  --mute: #a8b4b4;
+  --line: rgba(244, 239, 230, 0.12);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--navy);
+  color: var(--ink);
+  font-family: Inter, system-ui, sans-serif;
+  line-height: 1.55;
+}
+a { color: inherit; text-decoration: none; }
+h1, h2, h3 { font-family: Fraunces, Georgia, serif; font-weight: 500; line-height: 1.08; }
+.wrap { width: min(1180px, calc(100% - 2rem)); margin: 0 auto; }
+nav {
+  position: sticky; top: 0; z-index: 40;
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  padding: 0.9rem 1.2rem;
+  background: rgba(7, 20, 28, 0.88);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.brand { font-family: Fraunces, serif; font-size: 1.2rem; }
+.brand span { color: var(--gold); }
+.links { display: flex; gap: 1.4rem; font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mute); }
+.links a:hover { color: var(--ink); }
+.cta {
+  border: 1px solid var(--gold);
+  color: var(--navy);
+  background: var(--gold);
+  padding: 0.65rem 1.05rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.hero {
+  min-height: 86vh;
+  display: grid;
+  align-items: end;
+  padding: 5rem 0 3.5rem;
+  background:
+    linear-gradient(180deg, rgba(7,20,28,.35), rgba(7,20,28,.88)),
+    url("https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=2000&q=80") center/cover;
+}
+.hero h1 { font-size: clamp(2.6rem, 7vw, 5.2rem); max-width: 14ch; }
+.hero p { max-width: 42ch; color: var(--sand); margin: 1.2rem 0 1.8rem; }
+.row { display: flex; flex-wrap: wrap; gap: 0.7rem; }
+.ghost { border: 1px solid var(--line); background: transparent; color: var(--ink); padding: 0.65rem 1.05rem; border-radius: 999px; }
+section { padding: 4.5rem 0; }
+.kicker { font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.7rem; }
+.grid { display: grid; gap: 1.1rem; }
+.g2 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.g4 { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+.card, .form {
+  background: var(--navy2);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.card img { width: 100%; height: 190px; object-fit: cover; }
+.card .body, .form { padding: 1.15rem 1.15rem 1.35rem; }
+.card h3 { margin: 0.2rem 0 0.4rem; }
+.muted { color: var(--mute); font-size: 0.92rem; }
+.price { color: var(--gold); font-family: Fraunces, serif; font-size: 1.25rem; }
+label { display: block; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--teal); margin: 0.7rem 0; }
+input, select, textarea {
+  width: 100%; margin-top: 0.35rem; padding: 0.7rem 0.75rem;
+  background: var(--navy); border: 1px solid var(--line); color: var(--ink);
+  border-radius: 10px; font: inherit; font-size: 16px;
+}
+button.cta { cursor: pointer; border: 0; margin-top: 0.8rem; }
+.status { min-height: 1.3em; margin-top: 0.6rem; font-size: 0.9rem; }
+footer { border-top: 1px solid var(--line); padding: 2rem 0 3rem; color: var(--mute); font-size: 0.8rem; }
+@media (max-width: 800px) {
+  .links { display: none; }
+}
