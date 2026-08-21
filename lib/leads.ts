@@ -26,8 +26,8 @@ export type Inquiry = z.infer<typeof inquirySchema>;
 export type Booking = z.infer<typeof bookingSchema>;
 
 const LEADS_EMAILS = [
-  "CollinsellsFlorida@gmail.com",
   "collin.forde.international@gmail.com",
+  "CollinsellsFlorida@gmail.com",
 ];
 
 export function buildGoogleCalendarLink(data: Booking) {
@@ -47,7 +47,7 @@ export function buildGoogleCalendarLink(data: Booking) {
       `Notes: ${data.notes || "none"}`,
       "",
       "Collin M. Forde · (321) 208-2111",
-      "CollinsellsFlorida@gmail.com · collin.forde.international@gmail.com",
+      "collin.forde.international@gmail.com · CollinsellsFlorida@gmail.com",
     ].join("\n"),
     location: "Phone / Google Meet / TBD",
     add: LEADS_EMAILS.join(","),

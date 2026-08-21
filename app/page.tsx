@@ -3,9 +3,9 @@ import { useEffect, useState, FormEvent } from "react";
 import Globe from "./Globe";
 import ContactIcons from "./ContactIcons";
 
-const PRIMARY = "CollinsellsFlorida@gmail.com";
-const CC = "collin.forde.international@gmail.com";
-const PORTRAIT = "/collin-portrait.jpg";
+const PRIMARY = "collin.forde.international@gmail.com";
+const CC = "CollinsellsFlorida@gmail.com";
+const PORTRAIT = "/api/portrait";
 
 const TIME_SLOTS = [
   "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
@@ -222,7 +222,7 @@ export default function Page() {
         Collin M. Forde — Mr. Real Estate · License #SL3058438 · Dalton Wade Real Estate Group (CQ1047837)
         <br />Available Mon–Fri 9:00 AM – 5:00 PM Eastern · (321) 208-2111
         <br />Created by Apex Executive Studio / Paul Destocki 2026
-        <br />Forms deliver to CollinsellsFlorida@gmail.com and collin.forde.international@gmail.com
+        <br />Forms deliver to collin.forde.international@gmail.com (primary) and CollinsellsFlorida@gmail.com
       </footer>
     </>
   );
