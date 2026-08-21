@@ -2,7 +2,6 @@
 import { useEffect, useState, FormEvent } from "react";
 import Globe from "./Globe";
 import ContactIcons from "./ContactIcons";
-import { FLORIDA_CITIES, THAILAND_CITIES, TT_CITIES } from "../lib/markets";
 
 const PRIMARY = "collin.forde.international@gmail.com";
 const CC = "CollinsellsFlorida@gmail.com";
@@ -146,23 +145,38 @@ export default function Page() {
       <section id="markets">
         <div className="section-head">
           <div className="eyebrow">Where He Works</div>
-          <h2>Key cities. No borders.</h2>
-          <p className="lede" style={{ marginTop: 12 }}>
-            Florida, Thailand (outside Bangkok), and Trinidad & Tobago — plus international clients worldwide.
-          </p>
+          <h2>A portfolio that spans oceans.</h2>
         </div>
-        <div className="city-grid">
-          <div>
-            <h3>Florida</h3>
-            <p>{FLORIDA_CITIES.join(" · ")}</p>
+        <div className="market-grid">
+          <div className="card">
+            <div className="market-scene">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/West_Palm_Beach_Skyline_Night.JPG/640px-West_Palm_Beach_Skyline_Night.JPG" alt="West Palm Beach, Florida" loading="lazy" />
+            </div>
+            <div className="card-body">
+              <span className="coord">26.82°N · 80.14°W</span>
+              <h3>Florida</h3>
+              <p>Home base and primary market — residential, investment, and relocation property across Palm Beach County and beyond.</p>
+            </div>
           </div>
-          <div>
-            <h3>Thailand</h3>
-            <p>{THAILAND_CITIES.join(" · ")}</p>
+          <div className="card">
+            <div className="market-scene">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Wat_Arun_from_Chao_Phraya_River.jpg/640px-Wat_Arun_from_Chao_Phraya_River.jpg" alt="Thailand" loading="lazy" />
+            </div>
+            <div className="card-body">
+              <span className="coord">7.88°N · 98.39°E</span>
+              <h3>Thailand</h3>
+              <p>International investment and vacation property for buyers looking to place capital — and roots — in Southeast Asia.</p>
+            </div>
           </div>
-          <div>
-            <h3>Trinidad & Tobago</h3>
-            <p>{TT_CITIES.join(" · ")}</p>
+          <div className="card">
+            <div className="market-scene">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Pigeon_Point_beach.jpg/640px-Pigeon_Point_beach.jpg" alt="Tobago" loading="lazy" />
+            </div>
+            <div className="card-body">
+              <span className="coord">10.65°N · 61.52°W</span>
+              <h3>Trinidad & Tobago</h3>
+              <p>Caribbean residential and land opportunities for clients with ties to, or interest in, the twin islands.</p>
+            </div>
           </div>
         </div>
       </section>
@@ -231,18 +245,11 @@ export default function Page() {
               <div className="field-row">
                 <label>Phone<input name="phone" type="tel" /></label>
                 <label>Market
-                  <select name="market" defaultValue="">
-                    <option value="" disabled>Select city / market</option>
-                    <optgroup label="Florida">
-                      {FLORIDA_CITIES.map((c) => <option key={c} value={`Florida — ${c}`}>{c}</option>)}
-                    </optgroup>
-                    <optgroup label="Thailand">
-                      {THAILAND_CITIES.map((c) => <option key={c} value={`Thailand — ${c}`}>{c}</option>)}
-                    </optgroup>
-                    <optgroup label="Trinidad & Tobago">
-                      {TT_CITIES.map((c) => <option key={c} value={`Trinidad & Tobago — ${c}`}>{c}</option>)}
-                    </optgroup>
-                    <option value="Other / International">Other / International</option>
+                  <select name="market">
+                    <option>Florida</option>
+                    <option>Thailand</option>
+                    <option>Trinidad & Tobago</option>
+                    <option>Other / International</option>
                   </select>
                 </label>
               </div>
