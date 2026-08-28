@@ -2,6 +2,7 @@
 import { useEffect, useState, FormEvent } from "react";
 import Globe from "./Globe";
 import ContactIcons from "./ContactIcons";
+import { LISTINGS } from "../lib/data";
 
 const PRIMARY = "collin.forde.international@gmail.com";
 const CC = "CollinsellsFlorida@gmail.com";
@@ -42,7 +43,7 @@ function calendarAddLink(name: string, date: string, time: string, notes: string
   const fmt = (d: Date) => d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
   const p = new URLSearchParams({
     action: "TEMPLATE",
-    text: `Viewing / call with Collin Forde — ${name}`,
+    text: `Real estate viewing / call with Collin Forde — ${name}`,
     dates: `${fmt(start)}/${fmt(end)}`,
     details: `Client: ${name}\nNotes: ${notes || "none"}\nCollin: (321) 208-2111\nAvailability: Mon–Fri 9:00 AM – 5:00 PM`,
     location: "Phone / Google Meet / property",
@@ -66,7 +67,7 @@ export default function Page() {
     setInq("Sending…");
     const f = new FormData(e.currentTarget);
     try {
-      await dualEmail(`Property Inquiry from ${f.get("name")}`, {
+      await dualEmail(`Real Estate Inquiry from ${f.get("name")}`, {
         name: String(f.get("name")), email: String(f.get("email")), phone: String(f.get("phone") || ""),
         market: String(f.get("market") || ""), message: String(f.get("message")), type: "inquiry",
       });
@@ -88,7 +89,7 @@ export default function Page() {
     try {
       const r = await fetch("/api/book", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
       const d = await r.json();
-      if (!d.ok) await dualEmail(`Viewing / Call from ${name}`, body as any);
+      if (!d.ok) await dualEmail(`Real estate viewing / call from ${name}`, body as any);
       const link = d.calendarLink || calendarAddLink(name, date, time, notes);
       setAddLink(link);
       setSch("Request sent to both inboxes. Add it to Google Calendar below — Collin will confirm.");
@@ -101,8 +102,10 @@ export default function Page() {
       <nav>
         <div className="nav-mark">Collin M. <span>Forde</span></div>
         <div className="nav-links">
-          <a href="#about">About</a>
+          <a href="#real-estate">Real Estate</a>
           <a href="#markets">Markets</a>
+          <a href="#listings">Listings</a>
+          <a href="#tours">Tours</a>
           <a href="#calendar">Calendar</a>
           <a href="#contact">Contact</a>
         </div>
@@ -113,30 +116,31 @@ export default function Page() {
         <Globe />
         <div className="hero-content">
           <div className="eyebrow">International Real Estate</div>
-          <h1>Property<br />without <em>borders.</em></h1>
+          <h1>REAL ESTATE<br />without <em>borders.</em></h1>
           <div className="hero-cta">
-            <a className="btn btn-primary" href="tel:+13212082111">Call (321) 208-2111</a>
+            <a className="btn btn-primary" href="tel:+13212082111">Call about real estate</a>
             <div className="hero-cta-row">
               <ContactIcons />
             </div>
           </div>
-          <p className="lede">Collin M. Forde — Mr. Real Estate — Florida, Thailand, Trinidad & Tobago, and international clients. One advisor. No borders.</p>
+          <p className="lede">Collin M. Forde — Mr. Real Estate — Florida, Thailand, Trinidad &amp; Tobago. Buy. Sell. Invest. One advisor. No borders.</p>
         </div>
       </section>
 
-      <section id="about">
+      <section id="real-estate">
         <div className="section-head">
-          <div className="eyebrow">The Advisor</div>
+          <div className="eyebrow">The Practice</div>
           <h2>Mr. Real Estate.</h2>
         </div>
         <div className="about-grid">
           <div className="about-body">
+            <p>This is a real estate practice. Houses, condos, land, relocations, and cross-border investment property. Twenty-plus years. Florida license first. International clients second. No lifestyle-blog fog.</p>
             <p>What started as a Florida practice has grown into an international one — buyers and sellers now reach him from the Caribbean to Southeast Asia, drawn by the same thing: a realtor who actually picks up, follows through, and treats every transaction like it is the only one that matters.</p>
-            <p>License <strong>#SL3058438</strong>. All U.S. properties are sold through <strong>Dalton Wade Real Estate Group</strong>. International work is coordinated the same way Collin works at home — personally, directly, and without a runaround.</p>
+            <p>License <strong>#SL3058438</strong>. All U.S. real estate is sold through <strong>Dalton Wade Real Estate Group</strong>. International work is coordinated the same way Collin works at home — personally, directly, and without a runaround.</p>
           </div>
           <div>
             <div className="portrait">
-              <img src={PORTRAIT} alt="Collin M. Forde — Mr. Real Estate" width={400} height={500} />
+              <img src={PORTRAIT} alt="Collin M. Forde — Real Estate" width={400} height={500} />
             </div>
           </div>
         </div>
@@ -144,38 +148,88 @@ export default function Page() {
 
       <section id="markets">
         <div className="section-head">
-          <div className="eyebrow">Where He Works</div>
+          <div className="eyebrow">Where the real estate lives</div>
           <h2>A portfolio that spans oceans.</h2>
         </div>
         <div className="market-grid">
           <div className="card">
             <div className="market-scene">
-              <img src="https://images.unsplash.com/photo-1533106497176-45ae19e68ba2?w=640&q=70" alt="Florida coast" loading="lazy" />
+              <img src="https://images.unsplash.com/photo-1533106497176-45ae19e68ba2?w=640&q=70" alt="Florida real estate" loading="lazy" />
             </div>
             <div className="card-body">
               <span className="coord">26.82°N · 80.14°W</span>
-              <h3>Florida</h3>
+              <h3>Florida Real Estate</h3>
               <p>Home base and primary market — residential, investment, and relocation property across Palm Beach County and beyond.</p>
             </div>
           </div>
           <div className="card">
             <div className="market-scene">
-              <img src="https://images.unsplash.com/photo-1528183429752-a97d0bf99b5a?w=640&q=70" alt="Thailand" loading="lazy" />
+              <img src="https://images.unsplash.com/photo-1528183429752-a97d0bf99b5a?w=640&q=70" alt="Thailand real estate" loading="lazy" />
             </div>
             <div className="card-body">
               <span className="coord">7.88°N · 98.39°E</span>
-              <h3>Thailand</h3>
+              <h3>Thailand Real Estate</h3>
               <p>International investment and vacation property for buyers looking to place capital — and roots — in Southeast Asia.</p>
             </div>
           </div>
           <div className="card">
             <div className="market-scene">
-              <img src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=640&q=70" alt="Tobago" loading="lazy" />
+              <img src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=640&q=70" alt="Trinidad and Tobago real estate" loading="lazy" />
             </div>
             <div className="card-body">
               <span className="coord">10.65°N · 61.52°W</span>
-              <h3>Trinidad & Tobago</h3>
+              <h3>Trinidad &amp; Tobago Real Estate</h3>
               <p>Caribbean residential and land opportunities for clients with ties to, or interest in, the twin islands.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="listings">
+        <div className="section-head">
+          <div className="eyebrow">Featured Real Estate</div>
+          <h2>Inventory style. Live availability on request.</h2>
+          <p className="lede" style={{ marginTop: 12 }}>
+            Sample product cards so the site actually says real estate. Not a live MLS feed. Call or inquire for what is actually on the market.
+          </p>
+        </div>
+        <div className="market-grid" style={{ gridTemplateColumns: "repeat(2, 1fr)" }}>
+          {LISTINGS.map((l) => (
+            <article className="card" key={l.id}>
+              <div className="market-scene">
+                <img src={l.img} alt={`${l.title} — real estate`} loading="lazy" />
+              </div>
+              <div className="card-body">
+                <span className="coord">{l.city} · {l.status}</span>
+                <h3>{l.title}</h3>
+                <p>{l.price} · {l.beds} bd · {l.baths} ba · {l.sqft} sf</p>
+              </div>
+            </article>
+          ))}
+        </div>
+        <p style={{ marginTop: 18 }}>
+          <a className="btn btn-ghost" href="/listings">Open listings page</a>
+        </p>
+      </section>
+
+      <section id="tours">
+        <div className="section-head">
+          <div className="eyebrow">Cinematic listing tours</div>
+          <h2>Still photos. Listing weapon. Not a fake walkthrough.</h2>
+        </div>
+        <div className="about-grid">
+          <div className="about-body">
+            <p>New on this rebuild: cinematic property marketing from stills — Ken Burns motion, feature callouts, beds/baths/price end card. Thirty to fifty seconds. Built for buyers who will not watch a six-minute vertical mess.</p>
+            <p>Send the photos with the inquiry. Real estate moves faster when the listing does not look amateur.</p>
+          </div>
+          <div className="card">
+            <div className="market-scene">
+              <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=900&q=70" alt="Cinematic real estate listing tour" loading="lazy" />
+            </div>
+            <div className="card-body">
+              <span className="coord">Property walkthrough product</span>
+              <h3>Request a listing tour</h3>
+              <p>Exterior, living, kitchen, beds, outdoor, end card.</p>
             </div>
           </div>
         </div>
@@ -184,9 +238,9 @@ export default function Page() {
       <section id="calendar">
         <div className="section-head">
           <div className="eyebrow">Google Calendar</div>
-          <h2>Book a viewing.</h2>
+          <h2>Book a real estate viewing.</h2>
           <p className="lede" style={{ marginTop: 12 }}>
-            Available <strong>Monday–Friday, 9:00 AM – 5:00 PM</strong> (Eastern). Pick a slot — the request hits both of Collin's inboxes and you can add it to Google Calendar.
+            Available <strong>Monday–Friday, 9:00 AM – 5:00 PM</strong> (Eastern). Pick a slot — the request hits both of Collin&apos;s inboxes and you can add it to Google Calendar.
           </p>
           {cal ? (
             <p style={{ marginTop: 16 }}>
@@ -224,19 +278,19 @@ export default function Page() {
       <section id="contact">
         <div className="section-head">
           <div className="eyebrow">Get In Touch</div>
-          <h2>Let's talk property.</h2>
+          <h2>Let&apos;s talk real estate.</h2>
         </div>
         <div className="contact-wrap">
           <div className="contact-left">
-            <p className="lede">Wherever the property is — Florida, Thailand, Trinidad & Tobago, or somewhere else entirely — Collin is a call or message away.</p>
+            <p className="lede">Wherever the real estate is — Florida, Thailand, Trinidad &amp; Tobago, or somewhere else entirely — Collin is a call or message away.</p>
             <div className="cta-stack">
               <a className="btn btn-primary" href="tel:+13212082111">Call (321) 208-2111</a>
               <ContactIcons />
             </div>
           </div>
           <div className="card"><div className="card-body">
-            <div className="eyebrow">Send An Inquiry</div>
-            <h3 style={{ margin: "0.6rem 0 1rem" }}>Tell him what you're looking for.</h3>
+            <div className="eyebrow">Send A Real Estate Inquiry</div>
+            <h3 style={{ margin: "0.6rem 0 1rem" }}>Tell him what you want to buy or sell.</h3>
             <form onSubmit={onInq}>
               <div className="field-row">
                 <label>Name<input name="name" required /></label>
@@ -246,14 +300,14 @@ export default function Page() {
                 <label>Phone<input name="phone" type="tel" /></label>
                 <label>Market
                   <select name="market">
-                    <option>Florida</option>
-                    <option>Thailand</option>
-                    <option>Trinidad & Tobago</option>
-                    <option>Other / International</option>
+                    <option>Florida real estate</option>
+                    <option>Thailand real estate</option>
+                    <option>Trinidad & Tobago real estate</option>
+                    <option>Other / International real estate</option>
                   </select>
                 </label>
               </div>
-              <label>Message<textarea name="message" rows={4} required placeholder="What are you looking to buy, sell, or invest in?" /></label>
+              <label>Message<textarea name="message" rows={4} required placeholder="What real estate are you looking to buy, sell, or invest in?" /></label>
               <button className="btn btn-primary" type="submit">Send Inquiry</button>
               <p className="status">{inq}</p>
             </form>
@@ -262,7 +316,7 @@ export default function Page() {
       </section>
 
       <footer>
-        Collin M. Forde — Mr. Real Estate · License #SL3058438 · Dalton Wade Real Estate Group (CQ1047837)
+        REAL ESTATE · Collin M. Forde — Mr. Real Estate · License #SL3058438 · Dalton Wade Real Estate Group (CQ1047837)
         <br />Available Mon–Fri 9:00 AM – 5:00 PM Eastern · (321) 208-2111
         <br />Created by Apex Executive Studio / Paul Destocki 2026
         <br />Forms deliver to collin.forde.international@gmail.com (primary) and CollinsellsFlorida@gmail.com
