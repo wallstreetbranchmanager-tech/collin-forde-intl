@@ -54,20 +54,22 @@ export const TT_CITIES = [
 export const SITE_URL = "https://collin-forde-intl.vercel.app";
 
 export const SEO_TITLE =
-  "Collin M. Forde — International Realtor | Florida, Thailand & Trinidad & Tobago";
+  "Collin M. Forde | Real Estate — Florida, Thailand & Trinidad & Tobago";
 
 export const SEO_DESCRIPTION =
-  "Collin M. Forde — Mr. Real Estate. Buy, sell, and invest in Miami, Tampa, Naples, Phuket, Pattaya, Chiang Mai, Koh Samui, Port of Spain, Tobago, and more. License #SL3058438. Mon–Fri 9 AM–5 PM Eastern.";
+  "Collin M. Forde — Real Estate. Buy, sell, and invest in Miami, Tampa, Naples, Phuket, Pattaya, Chiang Mai, Koh Samui, Port of Spain, Tobago, and more. License #SL3058438. Mon–Fri 9 AM–5 PM Eastern.";
 
 export const SEO_KEYWORDS = [
   "Collin Forde",
   "Collin M. Forde",
+  "real estate",
   "international realtor",
+  "Florida real estate",
   "Florida realtor",
   "Dalton Wade Real Estate",
   "SL3058438",
   ...FLORIDA_CITIES.map((c) => `${c} real estate`),
-  ...THAILAND_CITIES.map((c) => `${c} property`),
+  ...THAILAND_CITIES.map((c) => `${c} real estate`),
   ...TT_CITIES.map((c) => `${c} real estate`),
   "Thailand investment property",
   "Trinidad Tobago realtor",
