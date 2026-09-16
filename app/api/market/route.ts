@@ -21,7 +21,8 @@ export async function GET(req: NextRequest) {
       const raw = readFileSync(file, "utf8").replace(/\s+/g, "");
       const buf = Buffer.from(raw, "base64");
       if (buf.length > 400 && buf[0] === 0xff && buf[1] === 0xd8) {
-        return new Response(Uint8Array.from(buf), {
+        const blob = new Blob([new Uint8Array(buf)], { type: "image/jpeg" });
+        return new Response(blob, {
           headers: {
             "Content-Type": "image/jpeg",
             "Cache-Control": "public, max-age=86400",
