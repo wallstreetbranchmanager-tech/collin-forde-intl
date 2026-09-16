@@ -49,7 +49,7 @@ export const LISTINGS = [
     sqft: "1,620",
     city: "St. Pete Beach, FL",
     status: "Featured",
-    img: "https://images.unsplash.com/photo-1499793983690-e25da703efd4?auto=format&fit=crop&w=1400&q=80",
+    img: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1400&q=80",
   },
   {
     id: "caribbean-consult",
