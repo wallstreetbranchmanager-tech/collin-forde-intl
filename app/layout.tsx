@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./photo-fix.css";
 import {
   SITE_URL,
   SEO_TITLE,
