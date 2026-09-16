@@ -1,24 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
-import { readFileSync } from "fs";
-import { join } from "path";
+
+/** Stable remote photos so cards never 404 on missing b64 shards. */
+const MAP: Record<string, string> = {
+  fl: "https://images.unsplash.com/photo-1533106497176-45ae19e68ba2?auto=format&fit=crop&w=1400&q=80",
+  th: "https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?auto=format&fit=crop&w=1400&q=80",
+  tt: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1400&q=80",
+};
 
 export async function GET(req: NextRequest) {
-  const id = req.nextUrl.searchParams.get("id");
-  if (!id || !["fl", "th", "tt"].includes(id)) {
-    return new NextResponse("not found", { status: 404 });
-  }
-  try {
-    const dir = join(process.cwd(), "public");
-    const a = readFileSync(join(dir, `market-${id}-a.b64`), "utf8").trim();
-    const b = readFileSync(join(dir, `market-${id}-b.b64`), "utf8").trim();
-    const buf = Buffer.from(a + b, "base64");
-    return new NextResponse(buf, {
-      headers: {
-        "Content-Type": "image/jpeg",
-        "Cache-Control": "public, max-age=86400",
-      },
-    });
-  } catch {
-    return new NextResponse("unavailable", { status: 404 });
-  }
+  const id = req.nextUrl.searchParams.get("id") || "";
+  const target = MAP[id];
+  if (!target) return new NextResponse("not found", { status: 404 });
+  return NextResponse.redirect(target, 302);
 }
