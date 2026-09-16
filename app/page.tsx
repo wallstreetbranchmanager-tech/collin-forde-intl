@@ -140,7 +140,7 @@ export default function Page() {
           </div>
           <div>
             <div className="portrait">
-              <img src={PORTRAIT} alt="Collin M. Forde — Real Estate" width={400} height={500} />
+              <img src={`${PORTRAIT}?v=3`} alt="Collin M. Forde — Real Estate" width={480} height={480} />
             </div>
           </div>
         </div>
@@ -154,7 +154,7 @@ export default function Page() {
         <div className="market-grid">
           <div className="card">
             <div className="market-scene">
-              <img src="https://images.unsplash.com/photo-1533106497176-45ae19e68ba2?w=640&q=70" alt="Florida real estate" loading="lazy" />
+              <img src="/api/market?id=fl&v=3" alt="West Palm Beach, Florida" loading="lazy" />
             </div>
             <div className="card-body">
               <span className="coord">26.82°N · 80.14°W</span>
@@ -164,7 +164,7 @@ export default function Page() {
           </div>
           <div className="card">
             <div className="market-scene">
-              <img src="https://images.unsplash.com/photo-1528183429752-a97d0bf99b5a?w=640&q=70" alt="Thailand real estate" loading="lazy" />
+              <img src="/api/market?id=th&v=3" alt="Thailand" loading="lazy" />
             </div>
             <div className="card-body">
               <span className="coord">7.88°N · 98.39°E</span>
@@ -174,7 +174,7 @@ export default function Page() {
           </div>
           <div className="card">
             <div className="market-scene">
-              <img src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=640&q=70" alt="Trinidad and Tobago real estate" loading="lazy" />
+              <img src="/api/market?id=tt&v=3" alt="Tobago" loading="lazy" />
             </div>
             <div className="card-body">
               <span className="coord">10.65°N · 61.52°W</span>
